@@ -1,0 +1,647 @@
+/* ===== 1. VARIABLES DE COLORES ===== */
+
+:root {
+    --bg: #1b1b1b;
+    --panel: #111;
+    --rojo: #c1121f;
+    --rojo2: #ff2a3a;
+    --texto: #f2f2f2;
+    --gris: #9a9a9a;
+
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* ===== 2. DISEÑO GENERAL ===== */
+
+body {
+    background: var(--bg);
+    color: var(--texto);
+    font-family: Inter, Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+/* ===== 3. ENCABEZADO ===== */
+
+header {
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.logo {
+    font-family: Oswald, Impact, sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    color: #ddd;
+    text-shadow: 0 0 8px var(--rojo);
+}
+
+.logo small {
+    display: block;
+    font-size: .5rem;
+    color: var(--rojo2);
+    letter-spacing: 1px;
+}
+
+nav {
+    display: flex;
+    gap: 34px;
+}
+
+nav button {
+    font-weight: 600;
+    padding: 6px 2px;
+    border-bottom: 2px solid transparent;
+}
+
+nav button.activo {
+    border-color: var(--rojo);
+}
+
+nav button:hover {
+    color: var(--rojo2);
+}
+
+
+/* ===== 4. ICONOS ===== */
+
+.iconos {
+    display: flex;
+    gap: 50px;
+    align-items: center;
+}
+
+.iconos button {
+    font-size: 1.4rem;
+    position: relative;
+}
+
+#contador {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: var(--rojo);
+    border-radius: 50%;
+    font-size: .7rem;
+    min-width: 18px;
+    height: 18px;
+    display: grid;
+    place-items: center;
+}
+
+
+/* ===== 5. CONTENIDO PRINCIPAL ===== */
+
+main {
+    flex: 1;
+    padding: 18px 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.vista {
+    display: none;
+}
+
+.vista.activa {
+    display: block;
+}
+
+
+/* ===== 6. BANNER ===== */
+
+.banner {
+    background: radial-gradient(
+        circle at 75% 40%,
+        #7a0d14,
+        #2a0508 55%,
+        #0c0c0c
+    );
+
+    border-radius: 6px;
+    padding: 48px 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    min-height: 250px;
+
+    width: 100%;
+    height: 300px;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.banner h1 {
+    font-family: Oswald, Impact, sans-serif;
+    font-size: 2.4rem;
+    line-height: 1.15;
+}
+
+.banner h1 span {
+    color: var(--rojo2);
+}
+
+.banner p {
+    letter-spacing: 3px;
+    font-size: .75rem;
+    color: #ccc;
+    margin: 14px 0;
+}
+
+.imagen-banner {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    display: block;
+}
+
+
+/* ===== 7. BOTONES ===== */
+
+.btn {
+    background: var(--rojo);
+    padding: 10px 22px;
+    border-radius: 4px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.btn:hover {
+    background: var(--rojo2);
+}
+
+
+/* ===== 8. TÍTULOS ===== */
+
+h2 {
+    font-family: Oswald, Impact, sans-serif;
+    font-style: italic;
+    color: var(--rojo2);
+    margin: 30px 0 16px;
+    font-size: 1.5rem;
+}
+
+
+/* ===== 9. PRODUCTOS ===== */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    align-items: stretch;
+    width: 100%;
+}
+
+.card {
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    transition: transform 0.3s, border-color 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: #c1121f;
+}
+
+/* RECUADRO DE LA IMAGEN */
+
+.foto {
+    width: 100%;
+    height: 180px;
+    padding: 10px;
+    background: #202020;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+}
+
+.foto img:hover {
+    transform: scale(1.05);
+}
+
+/* INFORMACIÓN DEBAJO DE LA IMAGEN */
+
+.info {
+    background: #111;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    flex: 1;
+}
+
+.info small {
+    color: #9a9a9a;
+    font-size: 12px;
+}
+
+.info strong {
+    color: white;
+    font-size: 15px;
+}
+
+.etiqueta {
+    color: #ff2a3a;
+    font-size: 18px;
+    font-weight: bold;
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.precio {
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.precio s {
+    color: #999;
+    font-size: 13px;
+    margin-left: 5px;
+}
+
+.info .btn {
+    margin-top: auto;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background: #c1121f;
+    color: white;
+    border-radius: 5px;
+}
+
+.info .btn:hover {
+    background: #ff2a3a;
+}
+
+/* TABLETAS */
+
+@media (max-width: 800px) {
+    .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+}
+
+/* CELULARES */
+
+@media (max-width: 400px) {
+    .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .foto {
+        height: 135px;
+    }
+
+    .info {
+        padding: 9px;
+    }
+
+    .info strong {
+        font-size: 13px;
+    }
+
+    .precio {
+        font-size: 15px;
+    }
+}
+
+/* ===== 10. FILTROS ===== */
+
+.filtros {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+
+.filtros button {
+    border: 1px solid var(--rojo);
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+
+.filtros button.activo,
+.filtros button:hover {
+    background: var(--rojo);
+}
+
+
+/* ===== 11. PIE DE PÁGINA ===== */
+
+footer {
+    background: #000;
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+footer h4 {
+    color: var(--rojo2);
+    font-family: Oswald, sans-serif;
+    margin-bottom: 6px;
+}
+
+footer a {
+    display: block;
+    font-size: .8rem;
+    color: var(--rojo);
+    margin: 3px 0;
+}
+
+footer a:hover {
+    color: var(--rojo2);
+}
+
+.redes {
+    display: flex;
+    gap: 10px;
+    font-size: 1.5rem;
+}
+
+
+/* ===== 12. CARRITO Y VENTANAS ===== */
+
+.fondo {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .7);
+    display: none;
+    z-index: 30;
+}
+
+.fondo.abierto {
+    display: block;
+}
+
+.carrito {
+    position: fixed;
+    top: 0;
+    right: -380px;
+    width: min(360px, 100%);
+    height: 100%;
+    background: var(--panel);
+    z-index: 40;
+    transition: right .25s;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    padding-top: calc(
+        20px + env(safe-area-inset-top, 0px)
+    );
+}
+
+.carrito.abierto {
+    right: 0;
+}
+
+.carrito h3 {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.carrito .cerrar-carrito {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#items {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid #333;
+    font-size: .9rem;
+}
+
+.cant button {
+    border: 1px solid var(--rojo);
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+}
+
+.total {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 14px 0;
+}
+
+
+/* ===== 13. VENTANAS MODALES ===== */
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--panel);
+    border: 1px solid var(--rojo);
+    border-radius: 8px;
+    padding: 24px;
+    z-index: 40;
+    width: min(400px, 92%);
+    display: none;
+}
+
+.modal.abierto {
+    display: block;
+}
+
+.modal h3 {
+    margin-bottom: 12px;
+    color: var(--rojo2);
+}
+
+.modal p {
+    font-size: .9rem;
+    line-height: 1.5;
+    color: #ccc;
+    margin-bottom: 12px;
+}
+
+
+/* ===== 14. CAMPOS DE TEXTO ===== */
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: #222;
+    border: 1px solid #444;
+    color: #fff;
+    border-radius: 4px;
+    font: inherit;
+}
+
+.cerrar {
+    float: right;
+    font-size: 1.2rem;
+}
+
+
+/* ===== 15. MENSAJES TEMPORALES ===== */
+
+#toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--rojo);
+    padding: 10px 20px;
+    border-radius: 6px;
+    z-index: 50;
+    transition: transform .3s;
+}
+
+#toast.ver {
+    transform: translateX(-50%) translateY(0);
+}
+
+
+/* ===== 16. DISEÑO PARA CELULARES ===== */
+
+@media (max-width: 640px) {
+
+    nav {
+        gap: 16px;
+        order: 3;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .banner h1 {
+        font-size: 1.8rem;
+    }
+
+}
+/* Imágenes que se pueden ampliar */
+.foto img {
+cursor: zoom-in;
+transition: transform 0.3s ease;
+}
+
+.foto img:hover {
+transform: scale(1.04);
+}
+
+/* Fondo oscuro del visor */
+.visor-imagen {
+display: none;
+position: fixed;
+inset: 0;
+z-index: 9999;
+background: rgba(0, 0, 0, 0.92);
+justify-content: center;
+align-items: center;
+padding: 25px;
+}
+
+/* Mostrar el visor */
+.visor-imagen.abierto {
+display: flex;
+}
+
+/* Imagen ampliada */
+.visor-imagen img {
+max-width: 90%;
+max-height: 85vh;
+object-fit: contain;
+border: 2px solid #c90024;
+border-radius: 10px;
+box-shadow: 0 0 25px rgba(201, 0, 36, 0.5);
+}
+
+/* Botón para cerrar */
+.cerrar-visor {
+position: absolute;
+top: 15px;
+right: 25px;
+background: transparent;
+border: none;
+color: white;
+font-size: 45px;
+cursor: pointer;
+}
+<!--FOOTER-->
+    body{
+        margin: 0%;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    footer{
+        margin-top: auto;
+    }

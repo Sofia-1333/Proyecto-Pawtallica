@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inventario | Pawtallica</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .admin-wrap{max-width:1100px;margin:35px auto;padding:20px;color:#222}
+    .admin-wrap h1,.admin-wrap h2{font-family:Oswald, sans-serif}
+    .admin-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;background:#f5f5f5;padding:20px;border-radius:12px}
+    .admin-form label{display:flex;flex-direction:column;gap:6px;font-weight:600}
+    .admin-form input{padding:11px;border:1px solid #ccc;border-radius:6px}
+    .admin-wrap table{width:100%;border-collapse:collapse;background:white;margin-top:18px}
+    .admin-wrap th,.admin-wrap td{padding:10px;border:1px solid #ddd;text-align:left}
+    .admin-wrap th{background:#222;color:white}
+    .stock-input{width:85px;padding:7px}
+    .admin-actions{display:flex;gap:12px;flex-wrap:wrap;margin:15px 0}
+    @media(max-width:650px){.admin-wrap{padding:10px;overflow-x:auto}}
+  </style>
+</head>
+<body>
+<header><div class="logo"><img src="{{ url_for('static', filename='imagenes/logo.png') }}" height="75" alt="Pawtallica"></div><nav><a href="/" style="color:inherit">Volver a la tienda</a></nav></header>
+<main class="admin-wrap">
+  <h1>Administración del inventario</h1>
+  <p>Los productos del catálogo original se conservaron. Desde aquí puedes registrar productos nuevos y actualizar sus existencias.</p>
+  <h2>Agregar producto</h2>
+  <form id="form-producto" class="admin-form">
+    <label>Nombre<input name="nombre" required maxlength="120"></label>
+    <label>Categoría<input name="categoria" required maxlength="80"></label>
+    <label>Precio (COP)<input name="precio" type="number" min="0" step="0.01" required></label>
+    <label>Cantidad inicial<input name="cantidad" type="number" min="0" step="1" value="0" required></label>
+    <label>Descripción<input name="descripcion" maxlength="300"></label>
+    <label>Ruta de imagen (opcional)<input name="imagen" placeholder="/static/imagenes/producto.jpg"></label>
+    <div><button class="btn" type="submit">Guardar producto</button></div>
+  </form>
+  <p id="mensaje" role="status"></p>
+  <div class="admin-actions"><h2>Productos registrados</h2><button class="btn" type="button" onclick="cargarInventario()">Actualizar lista</button></div>
+  <div style="overflow-x:auto"><table><thead><tr><th>ID</th><th>Producto</th><th>Categoría</th><th>Precio</th><th>Existencias</th><th>Actualizar stock</th></tr></thead><tbody id="filas"></tbody></table></div>
+</main>
+<script>
+async function cargarInventario(){
+ const r=await fetch('/api/productos'); const productos=await r.json();
+ document.getElementById('filas').innerHTML=productos.map(p=>`<tr><td>${p.id}</td><td>${p.nombre}</td><td>${p.cat}</td><td>$${Number(p.precio).toLocaleString('es-CO')}</td><td>${p.cantidad}</td><td><form onsubmit="actualizarStock(event,${p.id})"><input class="stock-input" type="number" min="0" name="cantidad" value="${p.cantidad}" required><button type="submit">Guardar</button></form></td></tr>`).join('');
+}
+document.getElementById('form-producto').addEventListener('submit',async e=>{
+ e.preventDefault(); const datos=Object.fromEntries(new FormData(e.target).entries());
+ datos.precio=Number(datos.precio); datos.cantidad=Number(datos.cantidad);
+ const r=await fetch('/api/productos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(datos)});
+ const respuesta=await r.json(); document.getElementById('mensaje').textContent=respuesta.mensaje||respuesta.error;
+ if(r.ok){e.target.reset();e.target.cantidad.value=0;await cargarInventario();}
+});
+async function actualizarStock(e,id){e.preventDefault();const cantidad=Number(new FormData(e.target).get('cantidad'));
+ const r=await fetch(`/api/productos/${id}/stock`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({cantidad})});
+ const d=await r.json();document.getElementById('mensaje').textContent=d.mensaje||d.error; if(r.ok)cargarInventario();
+}
+cargarInventario();
+</script>
+</body></html>
