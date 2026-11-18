@@ -473,6 +473,8 @@ function dibujarCarrito() {
 // 14. FINALIZAR COMPRA
 // ==================================================
 
+let procesandoCompra = false;
+
 async function pagar() {
 
     if (carrito.length === 0) {
@@ -484,10 +486,15 @@ async function pagar() {
     let resumen = "🤘 PAWTALLICA - RESUMEN DE COMPRA\n\n";
 
     carrito.forEach(elemento => {
-        const producto = productos.find(p => p.id === elemento.id);
+
+        const producto = productos.find(
+            p => p.id === elemento.id
+        );
+
         if (!producto) return;
 
         const subtotal = producto.precio * elemento.cant;
+
         total += subtotal;
 
         resumen += `${producto.nombre}\n`;
@@ -498,19 +505,18 @@ async function pagar() {
     resumen += "--------------------------\n";
     resumen += `TOTAL A PAGAR: ${fmt(total)}\n`;
 
-    const confirmar = confirm(
-        resumen + "\n¿Deseas finalizar tu compra?"
-    );
-
-    if (!confirmar) {
+    if (!confirm(resumen + "\n¿Deseas finalizar tu compra?")) {
         toast("Tu compra sigue pendiente.");
         return;
     }
 
     try {
+
         const respuesta = await fetch("/api/compras", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({
                 articulos: carrito.map(elemento => ({
                     id: elemento.id,
@@ -522,36 +528,54 @@ async function pagar() {
         const resultado = await respuesta.json();
 
         if (!respuesta.ok) {
-            alert(resultado.error || "No fue posible completar la compra.");
+            alert(
+                resultado.error ||
+                "No fue posible completar la compra."
+            );
+            return;
+        }
+
+        // Vaciar el carrito solamente después
+        // de confirmar la compra en el servidor.
+
+        carrito = [];
+        guardar();
+        dibujarCarrito();
+
+        // Actualizar los productos y el inventario.
+
+        try {
+
             const actualizacion = await fetch("/api/productos");
+
             if (actualizacion.ok) {
                 productos = await actualizacion.json();
                 iniciar();
             }
-            return;
-        }
 
-        // El carrito se vacía únicamente después de confirmar el descuento en SQLite.
-        carrito = [];
-        guardar();
-
-        const actualizacion = await fetch("/api/productos");
-        if (actualizacion.ok) {
-            productos = await actualizacion.json();
-            iniciar();
+        } catch (error) {
+            console.error("Error actualizando inventario:", error);
         }
 
         alert(
             "¡GRACIAS POR COMPRAR EN PAWTALLICA! 🤘\n\n" +
-            "Tu compra fue registrada y el stock se actualizó correctamente.\n\n" +
+            "Tu compra fue registrada correctamente.\n\n" +
             "Total: " + fmt(total)
         );
 
         cerrarTodo();
+
     } catch (error) {
+
         console.error("Error al registrar la compra:", error);
-        alert("No se pudo conectar con el servidor. Tu carrito se conservó y no se descontó stock.");
+
+        alert(
+            "No se pudo conectar con el servidor. " +
+            "Tu carrito se conservó y no se descontó stock."
+        );
+
     }
+
 }
 
 // ==================================================
